@@ -1,11 +1,13 @@
 {
   "name": "csv-to-json-parser",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
     "commander": "^8.3.0",
-    "csv-parse": "^5.0.4"
+    "csv-parse": "^5.0.4",
+    "stream-transform": "^3.0.4"
   }
 }
