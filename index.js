@@ -13,7 +13,7 @@ const { sourceFile, resultFile, separator } = program.opts();
 const obj = [];
 
 fs.createReadStream(sourceFile)
-  .pipe(csv())
+  .pipe(csv({ separator: separator }))
   .on('error', (err) => {
     process.stderr.write(`error: ${err}\n`);
     process.exit(1);
