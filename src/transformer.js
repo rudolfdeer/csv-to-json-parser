@@ -5,19 +5,27 @@ class Transformer extends Transform {
     super();
     this.separator = separator;
     this.arr = [];
+    this.rows = [];
+    this.headers = [];
   }
 
   _transform(chunk, encoding, callback) {
     const inputString = chunk.toString();
-    
-    const headers = inputString.trim().split(this.separator); //get headers here
-    const values = inputString.trim().split(this.separator);
-    const obj = {};
-    
-    for (let i = 0; i < headers.length; i++) {
-      obj[headers[i]] = values[i].trim();
+    this.rows = inputString.split('\n');
+
+    this.headers = this.rows[0].split(this.separator);
+    this.values = this.rows.map((row) => row.trim().split(this.separator));
+
+    for (let i = 1; i < this.rows.length - 1; i++) {
+      const obj = {};
+
+      for (let k = 0; k < this.values[i].length - 1; k++) {
+        obj[this.headers[k]] = this.values[i][k].trim();
+      }
+
+      this.arr.push(obj);
     }
-    this.arr.push(obj);
+
     this.push(JSON.stringify(this.arr));
     callback();
   }
