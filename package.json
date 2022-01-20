@@ -6,7 +6,6 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "commander": "^8.3.0",
-    "csv-parser": "^3.0.0"
+    "commander": "^8.3.0"
   }
 }

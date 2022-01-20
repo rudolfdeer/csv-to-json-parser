@@ -20,7 +20,7 @@ class Transformer extends Transform {
       const obj = {};
 
       for (let k = 0; k < this.values[i].length - 1; k++) {
-        obj[this.headers[k]] = this.values[i][k].trim();
+        obj[this.headers[k].trim()] = this.values[i][k].trim();
       }
 
       this.arr.push(obj);
