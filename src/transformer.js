@@ -11,8 +11,8 @@ class Transformer extends Transform {
 
   _transform(chunk, encoding, callback) {
     const inputString = chunk.toString();
-    this.rows = inputString.split('\n');
 
+    this.rows = inputString.split('\n');
     this.headers = this.rows[0].split(this.separator);
     this.values = this.rows.map((row) => row.trim().split(this.separator));
 

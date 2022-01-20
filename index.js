@@ -15,7 +15,6 @@ const inputStream = sourceFile ? fs.createReadStream(sourceFile) : process.stdin
 const transformStream = transformer(separator);
 const outputStream = resultFile ? fs.createWriteStream(resultFile) : process.stdout;
 
-
 pipeline(inputStream, transformStream, outputStream, (err) => {
   if (err) {
     process.stderr.write(`pipeline error: ${err}\n`);
