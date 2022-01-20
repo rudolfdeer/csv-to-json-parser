@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { program } from 'commander';
-import csv from 'csv-parser';
+import { pipeline } from 'stream';
+import { transformer } from './src/transformer.js';
 
 program
   .option('--sourceFile <file>', 'source file')
@@ -10,20 +11,14 @@ program
 
 const { sourceFile, resultFile, separator } = program.opts();
 
-const obj = [];
+const inputStream = sourceFile ? fs.createReadStream(sourceFile) : process.stdin;
+const transformStream = transformer(separator);
+const outputStream = resultFile ? fs.createWriteStream(resultFile) : process.stdout;
 
-fs.createReadStream(sourceFile)
-  .pipe(csv({ separator: separator }))
-  .on('error', (err) => {
-    process.stderr.write(`error: ${err}\n`);
+
+pipeline(inputStream, transformStream, outputStream, (err) => {
+  if (err) {
+    process.stderr.write(`pipeline error: ${err}\n`);
     process.exit(1);
-  })
-  .on('data', (chunk) => {
-    obj.push(chunk);
-  })
-  .on('end', () => {
-    fs.writeFileSync(resultFile, JSON.stringify(obj), (err) => {
-      if (err) throw err;
-    });
-    process.exit();
-  });
+  }
+});
