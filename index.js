@@ -4,6 +4,7 @@ import { pipeline } from 'stream';
 import readline from 'readline';
 import { google } from 'googleapis';
 import { transformer } from './src/transformer.js';
+import { detectSeparator } from './src/detectSeparator.js';
 
 program
   .option('--sourceFile <file>', 'source file')
@@ -14,7 +15,7 @@ program
 const { sourceFile, resultFile, separator } = program.opts();
 
 const inputStream = sourceFile ? fs.createReadStream(sourceFile) : process.stdin;
-const transformStream = transformer(separator);
+const transformStream = transformer(separator, detectSeparator);
 const outputStream = resultFile ? fs.createWriteStream(resultFile) : process.stdout;
 
 pipeline(inputStream, transformStream, outputStream, (err) => {

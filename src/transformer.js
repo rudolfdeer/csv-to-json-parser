@@ -1,9 +1,9 @@
 import { Transform } from 'stream';
-
 class Transformer extends Transform {
-  constructor(separator) {
+  constructor(separator, func) {
     super();
     this.separator = separator;
+    this.func = func;
     this.arr = [];
     this.rows = [];
     this.headers = [];
@@ -13,6 +13,12 @@ class Transformer extends Transform {
     const inputString = chunk.toString();
 
     this.rows = inputString.split('\n');
+
+    if (!this.separator) {
+      this.separator = this.func(inputString);
+      console.log('separator detected: ', this.separator);
+    }
+
     this.headers = this.rows[0].split(this.separator);
     this.values = this.rows.map((row) => row.trim().split(this.separator));
 
@@ -31,6 +37,6 @@ class Transformer extends Transform {
   }
 }
 
-const transformer = (separator) => new Transformer(separator);
+const transformer = (separator, func) => new Transformer(separator, func);
 
 export { transformer };
