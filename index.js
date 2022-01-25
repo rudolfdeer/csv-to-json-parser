@@ -37,9 +37,12 @@ const TOKEN_PATH = 'token.json';
  * @param {function} callback The callback to call with the authorized client.
  */
 function authorize(credentials, callback) {
-  const {client_secret, client_id, redirect_uris} = credentials.installed;
+  const { client_secret, client_id, redirect_uris } = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
-      client_id, client_secret, redirect_uris[0]);
+    client_id,
+    client_secret,
+    redirect_uris[0]
+  );
 
   // Check if we have previously stored a token.
   fs.readFile(TOKEN_PATH, (err, token) => {
@@ -79,29 +82,32 @@ function getAccessToken(oAuth2Client, callback) {
   });
 }
 /**
-* Describe with given media and metaData and upload it using google.drive.create method()
-*/ 
+ * Describe with given media and metaData and upload it using google.drive.create method()
+ */
 function uploadFile(auth) {
-  const drive = google.drive({version: 'v3', auth});
+  const drive = google.drive({ version: 'v3', auth });
   const fileMetadata = {
-    'name': 'result.json'
+    name: 'result.json',
   };
   const media = {
     mimeType: 'application/json',
-    body: fs.createReadStream('./result.json')
+    body: fs.createReadStream('./result.json'),
   };
-  drive.files.create({
-    resource: fileMetadata,
-    media: media,
-    fields: 'id'
-  }, (err, file) => {
-    if (err) {
-      // Handle error
-      console.error(err);
-    } else {
-      console.log('successfuly downloaded');
+  drive.files.create(
+    {
+      resource: fileMetadata,
+      media: media,
+      fields: 'id',
+    },
+    (err, file) => {
+      if (err) {
+        // Handle error
+        console.error(err);
+      } else {
+        console.log('successfuly downloaded');
+      }
     }
-  });
+  );
 }
 
 fs.readFile('credentials.json', (err, content) => {
@@ -109,6 +115,3 @@ fs.readFile('credentials.json', (err, content) => {
   // Authorize a client with credentials, then call the Google Drive API.
   authorize(JSON.parse(content), uploadFile);
 });
-
-
-
